@@ -5,6 +5,7 @@ import 'theme/neumorphic_theme.dart';
 import 'widgets/neu_widgets.dart';
 import 'widgets/confetti_celebration.dart';
 import 'widgets/add_birthday_dialog.dart';
+import 'widgets/celebration_dialog.dart';
 
 void main() {
   runApp(const BirthdayCountdownApp());
@@ -103,6 +104,26 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
     setState(() {
       _isCelebrating = true;
     });
+
+    showDialog(
+      context: context,
+      builder: (ctx) => CelebrationDialog(
+        theme: _neuTheme,
+        item: _activeItem,
+        onRetriggerConfetti: () {
+          setState(() {
+            _isCelebrating = false;
+          });
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              setState(() {
+                _isCelebrating = true;
+              });
+            }
+          });
+        },
+      ),
+    );
   }
 
   BirthdayItem get _activeItem {
