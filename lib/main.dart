@@ -54,7 +54,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
     ),
     BirthdayItem(
       id: '2',
-      name: 'Rizki Ramadhan',
+      name: 'Mas Iqbal',
       birthDate: DateTime(2007, 4, 12),
       relationship: 'Sahabat',
       icon: Icons.sports_esports_rounded,
