@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'models/birthday_item.dart';
-import 'theme/glass_theme.dart';
-import 'widgets/glass_widgets.dart';
+import 'theme/neumorphic_theme.dart';
+import 'widgets/neu_widgets.dart';
 import 'widgets/confetti_celebration.dart';
 import 'widgets/add_birthday_dialog.dart';
 import 'widgets/celebration_dialog.dart';
@@ -22,7 +22,7 @@ class BirthdayCountdownApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Segoe UI',
         useMaterial3: true,
-        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFFE8EEF5),
       ),
       home: const BirthdayCountdownHomePage(),
     );
@@ -37,8 +37,8 @@ class BirthdayCountdownHomePage extends StatefulWidget {
 }
 
 class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
-  bool _isDark = true;
-  late GlassTheme _glassTheme;
+  bool _isDark = false;
+  late NeuTheme _neuTheme;
   Timer? _timer;
   bool _isCelebrating = false;
   String _selectedFilter = 'Semua';
@@ -76,7 +76,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
   @override
   void initState() {
     super.initState();
-    _glassTheme = GlassTheme(isDark: _isDark);
+    _neuTheme = NeuTheme(isDark: _isDark);
     _activeBirthdayId = _birthdays.first.id;
 
     // Timer realtime untuk memperbarui countdown setiap 1 detik
@@ -96,7 +96,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
   void _toggleTheme() {
     setState(() {
       _isDark = !_isDark;
-      _glassTheme = GlassTheme(isDark: _isDark);
+      _neuTheme = NeuTheme(isDark: _isDark);
     });
   }
 
@@ -109,7 +109,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
       context: context,
       barrierColor: Colors.transparent,
       builder: (ctx) => CelebrationDialog(
-        theme: _glassTheme,
+        theme: _neuTheme,
         name: _activeItem.name,
       ),
     );
@@ -132,7 +132,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
     showDialog(
       context: context,
       builder: (ctx) => AddBirthdayDialog(
-        theme: _glassTheme,
+        theme: _neuTheme,
         initialItem: itemToEdit,
         onSave: (savedItem) {
           setState(() {
@@ -150,9 +150,8 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
             SnackBar(
               content: Text(
                 itemToEdit != null ? 'Data berhasil diperbarui!' : 'Pengingat ulang tahun ditambahkan!',
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
-              backgroundColor: _glassTheme.primaryAccent.withValues(alpha: 0.9),
+              backgroundColor: _neuTheme.primaryAccent,
               behavior: SnackBarBehavior.floating,
               duration: const Duration(seconds: 2),
             ),
@@ -177,19 +176,19 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
       context: context,
       builder: (ctx) => Dialog(
         backgroundColor: Colors.transparent,
-        child: GlassContainer(
-          theme: _glassTheme,
+        child: NeuContainer(
+          theme: _neuTheme,
           padding: const EdgeInsets.all(22),
           borderRadius: BorderRadius.circular(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.delete_outline_rounded, size: 44, color: _glassTheme.secondaryAccent),
+              Icon(Icons.delete_outline_rounded, size: 44, color: _neuTheme.secondaryAccent),
               const SizedBox(height: 12),
               Text(
                 'Hapus Pengingat?',
                 style: TextStyle(
-                  color: _glassTheme.textPrimary,
+                  color: _neuTheme.textPrimary,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -198,24 +197,24 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
               Text(
                 'Apakah Anda yakin ingin menghapus data ulang tahun "${item.name}"?',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: _glassTheme.textSecondary, fontSize: 13),
+                style: TextStyle(color: _neuTheme.textSecondary, fontSize: 13),
               ),
               const SizedBox(height: 20),
               Row(
                 children: [
                   Expanded(
-                    child: GlassButton(
-                      theme: _glassTheme,
+                    child: NeuButton(
+                      theme: _neuTheme,
                       onPressed: () => Navigator.of(ctx).pop(),
-                      child: Text('Batal', style: TextStyle(color: _glassTheme.textSecondary)),
+                      child: Text('Batal', style: TextStyle(color: _neuTheme.textSecondary)),
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: GlassButton(
-                      theme: _glassTheme,
-                      isSelected: true,
-                      activeColor: _glassTheme.secondaryAccent,
+                    child: NeuButton(
+                      theme: _neuTheme,
+                      isFilled: true,
+                      activeColor: _neuTheme.secondaryAccent,
                       onPressed: () {
                         setState(() {
                           _birthdays.removeWhere((b) => b.id == item.id);
@@ -225,7 +224,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
                         });
                         Navigator.of(ctx).pop();
                       },
-                      child: Text('Hapus', style: TextStyle(color: _glassTheme.secondaryAccent, fontWeight: FontWeight.bold)),
+                      child: const Text('Hapus', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
@@ -237,9 +236,11 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
     );
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    final theme = _glassTheme;
+    final theme = _neuTheme;
     final now = DateTime.now();
     final active = _activeItem;
     final remainingDays = active.getRemainingDays(now);
@@ -254,50 +255,47 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
         ? _birthdays
         : _birthdays.where((b) => b.relationship == _selectedFilter).toList();
 
-    return GlassBackground(
-      theme: theme,
-      child: ConfettiCelebration(
-        isPlaying: _isCelebrating,
-        onFinished: () => setState(() => _isCelebrating = false),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Top Glass App Bar
-                  _buildTopAppBar(theme),
-                  const SizedBox(height: 22),
+    return ConfettiCelebration(
+      isPlaying: _isCelebrating,
+      onFinished: () => setState(() => _isCelebrating = false),
+      child: Scaffold(
+        backgroundColor: theme.baseColor,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Top Custom Neumorphic App Bar
+                _buildTopAppBar(theme),
+                const SizedBox(height: 24),
 
-                  // Hero Glass Countdown Card
-                  _buildHeroCountdownCard(
-                    theme: theme,
-                    active: active,
-                    remainingDays: remainingDays,
-                    duration: remainingDuration,
-                    isToday: isToday,
-                    turningAge: turningAge,
-                    zodiac: zodiac,
-                    progress: progress,
-                  ),
-                  const SizedBox(height: 26),
+                // Hero Neumorphic Countdown Card
+                _buildHeroCountdownCard(
+                  theme: theme,
+                  active: active,
+                  remainingDays: remainingDays,
+                  duration: remainingDuration,
+                  isToday: isToday,
+                  turningAge: turningAge,
+                  zodiac: zodiac,
+                  progress: progress,
+                ),
+                const SizedBox(height: 28),
 
-                  // Section Daftar Pengingat & Filter
-                  _buildListHeader(theme),
-                  const SizedBox(height: 14),
+                // Section Daftar Pengingat & Filter
+                _buildListHeader(theme),
+                const SizedBox(height: 14),
 
-                  // Filter Buttons
-                  _buildFilterChips(theme),
-                  const SizedBox(height: 18),
+                // Filter Buttons
+                _buildFilterChips(theme),
+                const SizedBox(height: 18),
 
-                  // List Card Ulang Tahun
-                  _buildBirthdayCardsList(theme, filteredBirthdays, active.id),
-                  const SizedBox(height: 32),
-                ],
-              ),
+                // List Card Ulang Tahun
+                _buildBirthdayCardsList(theme, filteredBirthdays, active.id),
+                const SizedBox(height: 32),
+              ],
             ),
           ),
         ),
@@ -305,13 +303,13 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
     );
   }
 
-  Widget _buildTopAppBar(GlassTheme theme) {
+  Widget _buildTopAppBar(NeuTheme theme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           children: [
-            GlassContainer(
+            NeuContainer(
               theme: theme,
               shape: BoxShape.circle,
               padding: const EdgeInsets.all(12),
@@ -333,11 +331,11 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
             ),
           ],
         ),
-        GlassIconButton(
+        NeuIconButton(
           icon: _isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
           size: 42,
           iconSize: 20,
-          iconColor: _isDark ? theme.goldAccent : Colors.white,
+          iconColor: _isDark ? Colors.amber : theme.textPrimary,
           tooltip: _isDark ? 'Mode Terang' : 'Mode Gelap',
           theme: theme,
           onPressed: _toggleTheme,
@@ -347,7 +345,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
   }
 
   Widget _buildHeroCountdownCard({
-    required GlassTheme theme,
+    required NeuTheme theme,
     required BirthdayItem active,
     required int remainingDays,
     required Duration duration,
@@ -360,22 +358,17 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
     final minutes = duration.inMinutes % 60;
     final seconds = duration.inSeconds % 60;
 
-    return GlassContainer(
+    return NeuContainer(
       theme: theme,
-      blur: 20,
       padding: const EdgeInsets.all(22),
       borderRadius: BorderRadius.circular(28),
-      border: Border.all(
-        color: Colors.white.withValues(alpha: 0.35),
-        width: 1.3,
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Baris Atas Hero: Avatar, Nama, Relasi & Edit
           Row(
             children: [
-              GlassContainer(
+              NeuContainer(
                 theme: theme,
                 shape: BoxShape.circle,
                 padding: const EdgeInsets.all(12),
@@ -404,7 +397,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        GlassBadge(
+                        NeuBadge(
                           text: active.relationship,
                           theme: theme,
                           color: active.relationship == 'Saya' ? theme.secondaryAccent : theme.primaryAccent,
@@ -423,7 +416,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
                   ],
                 ),
               ),
-              GlassIconButton(
+              NeuIconButton(
                 icon: Icons.edit_outlined,
                 size: 38,
                 iconSize: 18,
@@ -436,15 +429,12 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
 
           // Banner Ucapan jika hari ini ulang tahun
           if (isToday)
-            GlassContainer(
+            NeuContainer(
               theme: theme,
+              isPressed: true,
               margin: const EdgeInsets.only(bottom: 16),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: theme.secondaryAccent.withValues(alpha: 0.5),
-                width: 1.2,
-              ),
               child: Row(
                 children: [
                   const Text('🎉', style: TextStyle(fontSize: 26)),
@@ -476,21 +466,14 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
           Center(
             child: Column(
               children: [
-                ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
-                    colors: isToday
-                        ? [theme.secondaryAccent, const Color(0xFFFF9E00)]
-                        : [theme.primaryAccent, const Color(0xFF7000FF)],
-                  ).createShader(bounds),
-                  child: Text(
-                    isToday ? '0' : '$remainingDays',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 68,
-                      fontWeight: FontWeight.w900,
-                      height: 1.0,
-                      letterSpacing: -1.5,
-                    ),
+                Text(
+                  isToday ? '0' : '$remainingDays',
+                  style: TextStyle(
+                    color: isToday ? theme.secondaryAccent : theme.primaryAccent,
+                    fontSize: 64,
+                    fontWeight: FontWeight.w900,
+                    height: 1.0,
+                    letterSpacing: -1.5,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -545,7 +528,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
             ],
           ),
           const SizedBox(height: 8),
-          GlassProgressBar(
+          NeuProgressBar(
             progress: progress,
             theme: theme,
             height: 10,
@@ -554,14 +537,11 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
           const SizedBox(height: 18),
 
           // Trivia Zodiak & Hari Lahir
-          GlassContainer(
+          NeuContainer(
             theme: theme,
+            isPressed: true,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.2),
-              width: 1,
-            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -574,7 +554,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
                 Container(
                   width: 1,
                   height: 32,
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: theme.textSecondary.withValues(alpha: 0.2),
                 ),
                 _buildTriviaItem(
                   theme,
@@ -586,11 +566,11 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
             ),
           ),
 
-          const SizedBox(height: 18),
-          // Tombol Selebrasi Interaktif Glass
-          GlassButton(
+          const SizedBox(height: 16),
+          // Tombol Selebrasi Interaktif
+          NeuButton(
             theme: theme,
-            isSelected: true,
+            isFilled: true,
             activeColor: theme.secondaryAccent,
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 14),
@@ -616,17 +596,12 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
     );
   }
 
-  Widget _buildTimeBox(GlassTheme theme, String value, String unit, {bool isAccent = false}) {
-    return GlassContainer(
+  Widget _buildTimeBox(NeuTheme theme, String value, String unit, {bool isAccent = false}) {
+    return NeuContainer(
       theme: theme,
+      isPressed: true,
       padding: const EdgeInsets.symmetric(vertical: 12),
       borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: isAccent
-            ? theme.secondaryAccent.withValues(alpha: 0.5)
-            : Colors.white.withValues(alpha: 0.25),
-        width: 1,
-      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -654,7 +629,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
     );
   }
 
-  Widget _buildTriviaItem(GlassTheme theme, String title, String value, String sub) {
+  Widget _buildTriviaItem(NeuTheme theme, String title, String value, String sub) {
     return Column(
       children: [
         Text(
@@ -675,7 +650,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
     );
   }
 
-  Widget _buildListHeader(GlassTheme theme) {
+  Widget _buildListHeader(NeuTheme theme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -699,9 +674,9 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
             ),
           ],
         ),
-        GlassButton(
+        NeuButton(
           theme: theme,
-          isSelected: true,
+          isSelected: false,
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           borderRadius: BorderRadius.circular(14),
           onPressed: () => _openAddDialog(),
@@ -724,7 +699,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
     );
   }
 
-  Widget _buildFilterChips(GlassTheme theme) {
+  Widget _buildFilterChips(NeuTheme theme) {
     final filters = ['Semua', 'Saya', 'Sahabat', 'Keluarga', 'Teman'];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -734,7 +709,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
           final isSelected = _selectedFilter == f;
           return Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: GlassButton(
+            child: NeuButton(
               theme: theme,
               isSelected: isSelected,
               borderRadius: BorderRadius.circular(14),
@@ -756,7 +731,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
   }
 
   Widget _buildBirthdayCardsList(
-    GlassTheme theme,
+    NeuTheme theme,
     List<BirthdayItem> items,
     String activeId,
   ) {
@@ -798,25 +773,16 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
               _activeBirthdayId = item.id;
             });
           },
-          child: GlassContainer(
+          child: NeuContainer(
             theme: theme,
             borderRadius: BorderRadius.circular(20),
             padding: const EdgeInsets.all(16),
-            border: Border.all(
-              color: isActive
-                  ? theme.primaryAccent.withValues(alpha: 0.7)
-                  : Colors.white.withValues(alpha: 0.22),
-              width: isActive ? 1.5 : 1.1,
-            ),
-            customGradientColors: isActive
-                ? [
-                    theme.primaryAccent.withValues(alpha: 0.18),
-                    Colors.white.withValues(alpha: 0.06),
-                  ]
+            border: isActive
+                ? Border.all(color: theme.primaryAccent.withValues(alpha: 0.5), width: 1.5)
                 : null,
             child: Row(
               children: [
-                GlassContainer(
+                NeuContainer(
                   theme: theme,
                   shape: BoxShape.circle,
                   padding: const EdgeInsets.all(10),
@@ -845,7 +811,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
                             ),
                           ),
                           const SizedBox(width: 6),
-                          GlassBadge(
+                          NeuBadge(
                             text: item.relationship,
                             theme: theme,
                             color: item.relationship == 'Saya' ? theme.secondaryAccent : theme.primaryAccent,
@@ -886,7 +852,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
                 const SizedBox(width: 8),
                 PopupMenuButton<String>(
                   icon: Icon(Icons.more_vert_rounded, size: 20, color: theme.textSecondary),
-                  color: const Color(0xFF1E1435),
+                  color: theme.baseColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   onSelected: (val) {
                     if (val == 'edit') {

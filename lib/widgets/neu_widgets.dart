@@ -66,6 +66,7 @@ class NeuButton extends StatefulWidget {
   final BorderRadius? borderRadius;
   final Color? activeColor;
   final bool isSelected;
+  final bool isFilled;
 
   const NeuButton({
     super.key,
@@ -78,6 +79,7 @@ class NeuButton extends StatefulWidget {
     this.borderRadius,
     this.activeColor,
     this.isSelected = false,
+    this.isFilled = false,
   });
 
   @override
@@ -91,6 +93,39 @@ class _NeuButtonState extends State<NeuButton> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     final bool pressed = _isDown || widget.isSelected;
     final radius = widget.borderRadius ?? BorderRadius.circular(16);
+    final theme = widget.theme;
+
+    // Menentukan warna latar dan bayangan yang aman tanpa glitch GPU di HP
+    Color backgroundColor;
+    List<BoxShadow> shadows;
+    Border? border;
+
+    if (widget.isFilled) {
+      final solidColor = widget.activeColor ?? theme.primaryAccent;
+      backgroundColor = solidColor;
+      border = null;
+      shadows = [
+        BoxShadow(
+          color: solidColor.withValues(alpha: pressed ? 0.25 : 0.4),
+          offset: pressed ? const Offset(0, 2) : const Offset(0, 4),
+          blurRadius: pressed ? 4 : 8,
+          spreadRadius: 0,
+        ),
+      ];
+    } else {
+      // Tombol Neumorphic harus SELALU memakai warna dasar yang 100% solid/opaque
+      backgroundColor = theme.baseColor;
+      if (widget.isSelected) {
+        border = Border.all(
+          color: widget.activeColor ?? theme.primaryAccent,
+          width: 1.5,
+        );
+        shadows = theme.pressedShadows;
+      } else {
+        border = null;
+        shadows = _isDown ? theme.pressedShadows : theme.raisedShadows;
+      }
+    }
 
     return GestureDetector(
       onTapDown: (_) {
@@ -110,7 +145,7 @@ class _NeuButtonState extends State<NeuButton> with SingleTickerProviderStateMix
         }
       },
       child: AnimatedScale(
-        scale: _isDown ? 0.97 : 1.0,
+        scale: _isDown ? 0.96 : 1.0,
         duration: const Duration(milliseconds: 100),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 120),
@@ -118,17 +153,10 @@ class _NeuButtonState extends State<NeuButton> with SingleTickerProviderStateMix
           height: widget.height,
           padding: widget.padding,
           decoration: BoxDecoration(
-            color: widget.isSelected 
-                ? (widget.activeColor ?? widget.theme.primaryAccent).withValues(alpha: 0.15)
-                : widget.theme.baseColor,
+            color: backgroundColor,
             borderRadius: radius,
-            border: widget.isSelected
-                ? Border.all(
-                    color: (widget.activeColor ?? widget.theme.primaryAccent).withValues(alpha: 0.5),
-                    width: 1.5,
-                  )
-                : null,
-            boxShadow: pressed ? widget.theme.pressedShadows : widget.theme.raisedShadows,
+            border: border,
+            boxShadow: shadows,
           ),
           child: Center(
             child: widget.child,

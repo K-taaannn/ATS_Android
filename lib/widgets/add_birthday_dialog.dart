@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models/birthday_item.dart';
-import '../theme/glass_theme.dart';
-import 'glass_widgets.dart';
+import '../theme/neumorphic_theme.dart';
+import 'neu_widgets.dart';
 
 class AddBirthdayDialog extends StatefulWidget {
-  final GlassTheme theme;
+  final NeuTheme theme;
   final BirthdayItem? initialItem;
   final Function(BirthdayItem) onSave;
 
@@ -22,6 +22,7 @@ class AddBirthdayDialog extends StatefulWidget {
 class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
+  late TextEditingController _notesController;
   late DateTime _selectedDate;
   late String _selectedRelationship;
   late IconData _selectedIcon;
@@ -50,6 +51,7 @@ class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
     super.initState();
     final item = widget.initialItem;
     _nameController = TextEditingController(text: item?.name ?? '');
+    _notesController = TextEditingController(text: item?.notes ?? '');
     _selectedDate = item?.birthDate ?? DateTime(2007, 8, 15);
     _selectedRelationship = item?.relationship ?? 'Teman';
     _selectedIcon = item?.icon ?? Icons.cake_rounded;
@@ -58,6 +60,7 @@ class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
   @override
   void dispose() {
     _nameController.dispose();
+    _notesController.dispose();
     super.dispose();
   }
 
@@ -69,12 +72,19 @@ class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
       lastDate: DateTime.now(),
       builder: (context, child) {
         return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
-              primary: widget.theme.primaryAccent,
-              surface: const Color(0xFF1E1435),
-            ),
-          ),
+          data: widget.theme.isDark
+              ? ThemeData.dark().copyWith(
+                  colorScheme: ColorScheme.dark(
+                    primary: widget.theme.primaryAccent,
+                    surface: widget.theme.baseColor,
+                  ),
+                )
+              : ThemeData.light().copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: widget.theme.primaryAccent,
+                    surface: widget.theme.baseColor,
+                  ),
+                ),
           child: child!,
         );
       },
@@ -95,7 +105,7 @@ class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
         birthDate: _selectedDate,
         relationship: _selectedRelationship,
         icon: _selectedIcon,
-        notes: '',
+        notes: _notesController.text.trim(),
       );
       widget.onSave(newItem);
       Navigator.of(context).pop();
@@ -114,15 +124,10 @@ class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      child: GlassContainer(
+      child: NeuContainer(
         theme: theme,
-        blur: 24,
         padding: const EdgeInsets.all(24),
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.35),
-          width: 1.3,
-        ),
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -140,10 +145,10 @@ class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
                         color: theme.textPrimary,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        letterSpacing: -0.4,
+                        letterSpacing: -0.5,
                       ),
                     ),
-                    GlassIconButton(
+                    NeuIconButton(
                       icon: Icons.close_rounded,
                       size: 38,
                       iconSize: 18,
@@ -164,7 +169,7 @@ class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                GlassTextField(
+                NeuTextField(
                   controller: _nameController,
                   hintText: 'Contoh: Rias Pajar Prakoso',
                   prefixIcon: Icons.person_outline_rounded,
@@ -188,7 +193,7 @@ class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                GlassButton(
+                NeuButton(
                   theme: theme,
                   onPressed: _pickDate,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -230,7 +235,7 @@ class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
                   runSpacing: 8,
                   children: _relationships.map((rel) {
                     final isSelected = _selectedRelationship == rel;
-                    return GlassButton(
+                    return NeuButton(
                       theme: theme,
                       isSelected: isSelected,
                       borderRadius: BorderRadius.circular(14),
@@ -264,7 +269,7 @@ class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
                   runSpacing: 10,
                   children: _icons.map((iconData) {
                     final isSelected = _selectedIcon == iconData;
-                    return GlassIconButton(
+                    return NeuIconButton(
                       icon: iconData,
                       size: 42,
                       iconSize: 20,
@@ -274,13 +279,31 @@ class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
                     );
                   }).toList(),
                 ),
+                const SizedBox(height: 18),
+
+                // Catatan / Harapan / Wishlist
+                Text(
+                  'Catatan / Wishlist (Opsional)',
+                  style: TextStyle(
+                    color: theme.textSecondary,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                NeuTextField(
+                  controller: _notesController,
+                  hintText: 'Misal: Kado buku koding & traktiran',
+                  prefixIcon: Icons.card_giftcard_rounded,
+                  theme: theme,
+                ),
                 const SizedBox(height: 24),
 
                 // Tombol Simpan & Batal
                 Row(
                   children: [
                     Expanded(
-                      child: GlassButton(
+                      child: NeuButton(
                         theme: theme,
                         onPressed: () => Navigator.of(context).pop(),
                         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -296,16 +319,16 @@ class _AddBirthdayDialogState extends State<AddBirthdayDialog> {
                     ),
                     const SizedBox(width: 14),
                     Expanded(
-                      child: GlassButton(
+                      child: NeuButton(
                         theme: theme,
-                        isSelected: true,
+                        isFilled: true,
                         activeColor: theme.primaryAccent,
                         onPressed: _save,
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        child: Text(
+                        child: const Text(
                           'Simpan',
                           style: TextStyle(
-                            color: theme.primaryAccent,
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                           ),

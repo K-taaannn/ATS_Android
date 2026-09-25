@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../theme/glass_theme.dart';
-import 'glass_widgets.dart';
+import '../theme/neumorphic_theme.dart';
+import 'neu_widgets.dart';
 
-/// Popup selebrasi Glassmorphism yang muncul sekilas dan menutup secara otomatis
+/// Popup selebrasi Neumorphic yang muncul sekilas dan menutup secara otomatis
 class CelebrationDialog extends StatefulWidget {
-  final GlassTheme theme;
+  final NeuTheme theme;
   final String name;
 
   const CelebrationDialog({
@@ -63,26 +63,21 @@ class _CelebrationDialogState extends State<CelebrationDialog> with SingleTicker
     return GestureDetector(
       onTap: () => Navigator.of(context).maybePop(),
       child: Material(
-        color: Colors.black.withValues(alpha: 0.25),
+        color: Colors.black.withValues(alpha: 0.15),
         child: Center(
           child: ScaleTransition(
             scale: _scaleAnimation,
             child: FadeTransition(
               opacity: _fadeAnimation,
-              child: GlassContainer(
+              child: NeuContainer(
                 theme: theme,
-                blur: 20,
                 margin: const EdgeInsets.symmetric(horizontal: 28),
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 26),
                 borderRadius: BorderRadius.circular(28),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.4),
-                  width: 1.5,
-                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    GlassContainer(
+                    NeuContainer(
                       theme: theme,
                       shape: BoxShape.circle,
                       padding: const EdgeInsets.all(16),
