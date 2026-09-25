@@ -173,9 +173,15 @@ class _ConfettiCelebrationState extends State<ConfettiCelebration> with SingleTi
               left: MediaQuery.of(context).size.width * e.x,
               top: MediaQuery.of(context).size.height * e.y,
               child: IgnorePointer(
-                child: Text(
-                  e.emoji,
-                  style: TextStyle(fontSize: e.size),
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: Text(
+                    e.emoji,
+                    style: TextStyle(
+                      fontSize: e.size,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
                 ),
               ),
             );
