@@ -107,21 +107,10 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
 
     showDialog(
       context: context,
+      barrierColor: Colors.transparent,
       builder: (ctx) => CelebrationDialog(
         theme: _neuTheme,
-        item: _activeItem,
-        onRetriggerConfetti: () {
-          setState(() {
-            _isCelebrating = false;
-          });
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              setState(() {
-                _isCelebrating = true;
-              });
-            }
-          });
-        },
+        name: _activeItem.name,
       ),
     );
   }
