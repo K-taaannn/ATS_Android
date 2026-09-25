@@ -226,101 +226,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
     );
   }
 
-  void _showStudentInfo() {
-    showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: NeuContainer(
-          theme: _neuTheme,
-          padding: const EdgeInsets.all(24),
-          borderRadius: BorderRadius.circular(28),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              NeuContainer(
-                theme: _neuTheme,
-                shape: BoxShape.circle,
-                padding: const EdgeInsets.all(16),
-                child: Icon(Icons.school_rounded, size: 36, color: _neuTheme.primaryAccent),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Praktikum Pemrograman Mobile',
-                style: TextStyle(
-                  color: _neuTheme.textSecondary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.8,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Birthday Countdown App',
-                style: TextStyle(
-                  color: _neuTheme.textPrimary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 14),
-              NeuContainer(
-                theme: _neuTheme,
-                isPressed: true,
-                padding: const EdgeInsets.all(14),
-                borderRadius: BorderRadius.circular(16),
-                child: Column(
-                  children: [
-                    _buildInfoRow('Nama', 'Rias Pajar Prakoso'),
-                    const Divider(height: 16, thickness: 0.5),
-                    _buildInfoRow('Topik #18', 'Birthday Countdown'),
-                    const Divider(height: 16, thickness: 0.5),
-                    _buildInfoRow('Gaya Desain', 'Neumorphism (Soft UI)'),
-                    const Divider(height: 16, thickness: 0.5),
-                    _buildInfoRow('Kelas', 'XII RPL - ATS'),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              NeuButton(
-                theme: _neuTheme,
-                isSelected: true,
-                width: double.infinity,
-                onPressed: () => Navigator.of(ctx).pop(),
-                child: Text(
-                  'Tutup',
-                  style: TextStyle(
-                    color: _neuTheme.primaryAccent,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildInfoRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: TextStyle(color: _neuTheme.textSecondary, fontSize: 13),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            color: _neuTheme.textPrimary,
-            fontWeight: FontWeight.bold,
-            fontSize: 13,
-          ),
-        ),
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -415,28 +321,14 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
             ),
           ],
         ),
-        Row(
-          children: [
-            NeuIconButton(
-              icon: _isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-              size: 42,
-              iconSize: 20,
-              iconColor: _isDark ? Colors.amber : theme.textPrimary,
-              tooltip: _isDark ? 'Mode Terang' : 'Mode Gelap',
-              theme: theme,
-              onPressed: _toggleTheme,
-            ),
-            const SizedBox(width: 10),
-            NeuIconButton(
-              icon: Icons.info_outline_rounded,
-              size: 42,
-              iconSize: 20,
-              iconColor: theme.primaryAccent,
-              tooltip: 'Info Siswa',
-              theme: theme,
-              onPressed: _showStudentInfo,
-            ),
-          ],
+        NeuIconButton(
+          icon: _isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+          size: 42,
+          iconSize: 20,
+          iconColor: _isDark ? Colors.amber : theme.textPrimary,
+          tooltip: _isDark ? 'Mode Terang' : 'Mode Gelap',
+          theme: theme,
+          onPressed: _toggleTheme,
         ),
       ],
     );
