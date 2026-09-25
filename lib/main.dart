@@ -50,7 +50,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
       birthDate: DateTime(2007, 10, 28), // Siswa Kelas XII
       relationship: 'Saya',
       icon: Icons.person_rounded,
-      notes: 'Mendapat nilai terbaik di ujian praktikum Flutter & traktir sekelas! 🚀',
+      notes: '',
     ),
     BirthdayItem(
       id: '2',
@@ -58,7 +58,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
       birthDate: DateTime(2007, 4, 12),
       relationship: 'Sahabat',
       icon: Icons.sports_esports_rounded,
-      notes: 'Kado gamepad wireless atau mouse gaming',
+      notes: '',
     ),
     BirthdayItem(
       id: '3',
@@ -66,7 +66,7 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
       birthDate: DateTime(1982, 11, 15),
       relationship: 'Keluarga',
       icon: Icons.favorite_rounded,
-      notes: 'Buket bunga mawar & kue tart cokelat',
+      notes: '',
     ),
   ];
 
@@ -404,27 +404,14 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
               ),
             ),
             const SizedBox(width: 14),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Birthday Countdown',
-                  style: TextStyle(
-                    color: theme.textPrimary,
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -0.4,
-                  ),
-                ),
-                Text(
-                  'Neumorphism Soft UI • Rias Pajar P.',
-                  style: TextStyle(
-                    color: theme.textSecondary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+            Text(
+              'Birthday Countdown',
+              style: TextStyle(
+                color: theme.textPrimary,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.4,
+              ),
             ),
           ],
         ),
@@ -676,29 +663,6 @@ class _BirthdayCountdownHomePageState extends State<BirthdayCountdownHomePage> {
               ],
             ),
           ),
-
-          // Catatan / Wishlist jika ada
-          if (active.notes.isNotEmpty) ...[
-            const SizedBox(height: 14),
-            Row(
-              children: [
-                Icon(Icons.notes_rounded, size: 16, color: theme.textSecondary),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    active.notes,
-                    style: TextStyle(
-                      color: theme.textSecondary,
-                      fontSize: 12,
-                      fontStyle: FontStyle.italic,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ],
 
           const SizedBox(height: 16),
           // Tombol Selebrasi Interaktif
